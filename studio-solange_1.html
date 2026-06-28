@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Solange Mendes</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Jost',sans-serif;font-weight:300;background:#fff;color:#1a1a1a;font-size:13px}
+h1,h2,h3{font-family:'Playfair Display',serif;font-weight:400}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh}
+.page.on{display:flex;flex-direction:column}
+
+/* ── TOKENS ── */
+.ey{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#c4a0a0}
+.aey{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#555}
+.divl{height:1px;background:#f0e8e6;margin:16px 0}
+
+/* ── BUTTONS ── */
+.bp{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:#1a1a1a;color:#fff;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.11em;text-transform:uppercase;border:none;cursor:pointer;width:100%;transition:background .2s}
+.bp:hover{background:#333}
+.bp:disabled{background:#ccc;cursor:not-allowed}
+.bo{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;background:transparent;color:#1a1a1a;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.09em;text-transform:uppercase;border:1px solid #ddd;cursor:pointer;transition:all .2s}
+.bo:hover{border-color:#1a1a1a}
+.bpk{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f7eef0;color:#c47a85;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.09em;text-transform:uppercase;border:none;cursor:pointer}
+.bdanger{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;background:#fff5f5;color:#e05555;font-family:'Jost',sans-serif;font-size:11px;border:1px solid #f5d0d0;cursor:pointer}
+
+/* ── TAGS ── */
+.tpk{background:#fdf2f4;color:#c47a85;padding:2px 9px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;display:inline-block}
+.tgn{background:#f2faf5;color:#5a9e75;padding:2px 9px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;display:inline-block}
+.tgy{background:#f5f5f5;color:#888;padding:2px 9px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;display:inline-block}
+.tred{background:#fff5f5;color:#e05555;padding:2px 9px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;display:inline-block}
+
+/* ── FORM ── */
+.fl{margin-bottom:16px}
+.flb{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#bbb;margin-bottom:7px}
+.fi{width:100%;padding:10px 0;border:none;border-bottom:1px solid #e8e0e0;background:transparent;font-family:'Jost',sans-serif;font-size:13px;color:#1a1a1a;outline:none;transition:border-color .2s}
+.fi:focus{border-bottom-color:#c47a85}
+.fi::placeholder{color:#ccc}
+.fi-box{width:100%;padding:10px 12px;border:1px solid #e8e0e0;background:#fff;font-family:'Jost',sans-serif;font-size:13px;color:#1a1a1a;outline:none;transition:border-color .2s}
+.fi-box:focus{border-color:#c47a85}
+
+/* ── CARDS ── */
+.card{background:#fff;border:1px solid #f0e8e6;padding:16px}
+.card-soft{background:#fdf8f8;border:1px solid #f0e8e6;padding:16px}
+.pw{background:#f0e8e6;height:3px;border-radius:2px;margin-top:6px}
+.pf{height:100%;border-radius:2px;background:#c47a85}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:#fff;width:100%;max-width:440px;padding:28px}
+.modal-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #f0e8e6;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#bbb;line-height:1}
+.modal-close:hover{color:#1a1a1a}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;padding:12px 20px;font-size:12px;letter-spacing:.05em;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:#2d6a4f}
+#toast.error{background:#c0392b}
+
+/* ══════════════════════════════════════
+   PUBLIC — AGENDAMENTO
+══════════════════════════════════════ */
+.pub-header{background:#1a1a1a;padding:20px 32px;display:flex;align-items:center;justify-content:space-between}
+.pub-logo{font-family:'Playfair Display',serif;font-size:17px;color:#fff;font-weight:300}
+.pub-sub{font-size:9px;letter-spacing:.16em;color:#555;text-transform:uppercase;margin-top:2px}
+.pub-body{max-width:900px;margin:0 auto;padding:28px 24px}
+
+.steps{display:flex;align-items:flex-start;gap:0;margin-bottom:26px}
+.step{flex:1;text-align:center;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;top:11px;left:60%;width:80%;height:1px;background:#f0e8e6}
+.stepn{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;margin:0 auto 5px;transition:all .3s}
+.stepl{font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:#ccc;transition:color .3s}
+.stepl.on{color:#c47a85}
+.stepn.done{background:#1a1a1a;color:#fff}
+.stepn.active{background:#f7eef0;color:#c47a85;border:1px solid #e8d0d4}
+.stepn.idle{background:#f5f5f5;color:#ccc}
+
+.scard{border:1px solid #f0e8e6;padding:14px 16px;margin-bottom:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;background:#fff}
+.scard:hover,.scard.on{border-color:#e8d0d4;background:#fdf8f8}
+.scheck{width:17px;height:17px;border-radius:50%;border:1px solid #ddd;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .15s}
+.scard.on .scheck{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
+
+.dtabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px}
+.dtab{flex-shrink:0;padding:8px 12px;border:1px solid #f0e8e6;cursor:pointer;text-align:center;background:#fff;transition:all .15s;min-width:54px}
+.dtab:hover{border-color:#e8d0d4}
+.dtab.on{background:#1a1a1a;border-color:#1a1a1a}
+.dtab.on .dtd,.dtab.on .dtm{color:#fff}
+.dtab.blocked{background:#fafafa;cursor:not-allowed;opacity:.5}
+.dtd{font-family:'Playfair Display',serif;font-size:19px;font-weight:300;color:#1a1a1a;line-height:1}
+.dtm{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-top:3px}
+
+.slots{display:flex;flex-wrap:wrap;gap:6px}
+.slot{padding:8px 12px;font-size:11px;border:1px solid #f0e8e6;cursor:pointer;color:#888;transition:all .15s;background:#fff}
+.slot:hover{border-color:#c47a85;color:#1a1a1a}
+.slot.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.slot.taken{background:#fafafa;color:#ddd;cursor:not-allowed;text-decoration:line-through;border-color:#f5f5f5}
+.slot.blocked{background:#fafafa;color:#ddd;cursor:not-allowed;border-color:#f5f5f5}
+
+.sumbox{border:1px solid #f0e8e6;padding:16px;background:#fff}
+.sumrow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f9f5f5;font-size:12px}
+.sumrow:last-child{border:none}
+.sumlbl{color:#aaa}
+.sumval{color:#1a1a1a;font-weight:400}
+
+/* ══════════════════════════════════════
+   ADMIN LAYOUT
+══════════════════════════════════════ */
+.admin-layout{display:flex;min-height:100vh}
+.admin-sidebar{width:200px;flex-shrink:0;background:#1a1a1a;display:flex;flex-direction:column;padding:22px 16px;position:sticky;top:0;height:100vh}
+.admin-brand{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #2a2a2a}
+.admin-brand-name{font-family:'Playfair Display',serif;font-size:13px;color:#fff}
+.admin-brand-sub{font-size:9px;letter-spacing:.14em;color:#444;text-transform:uppercase;margin-top:2px}
+.ani{display:flex;align-items:center;gap:8px;padding:8px 8px;border-radius:2px;font-size:11px;color:#555;cursor:pointer;transition:all .15s;margin-bottom:2px}
+.ani:hover{color:#e8d0d4;background:rgba(255,255,255,.04)}
+.ani.on{color:#e8d0d4;background:rgba(196,122,133,.12);font-weight:500}
+.adot{width:4px;height:4px;border-radius:50%;background:#333;flex-shrink:0}
+.ani.on .adot{background:#c47a85}
+.admin-content{flex:1;padding:26px 28px;background:#fdf8f8;overflow-y:auto}
+
+/* ── Agenda items ── */
+.aitem{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #f8f4f4;background:#fff;transition:background .15s}
+.aitem:last-child{border:none}
+.aitem:hover{background:#fdf8f8}
+.atime{font-family:'Playfair Display',serif;font-size:15px;font-weight:300;color:#1a1a1a;width:42px;flex-shrink:0;text-align:center}
+.abar{width:2px;height:34px;flex-shrink:0;border-radius:2px}
+
+/* ── Stat cards ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#f0e8e6;margin-bottom:22px}
+.stat{background:#fff;padding:16px}
+.statv{font-family:'Playfair Display',serif;font-size:21px;color:#1a1a1a;margin-bottom:3px}
+.statl{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:#bbb}
+
+/* ── Horarios grid ── */
+.hgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:10px}
+.hslot{padding:9px 6px;text-align:center;font-size:11px;border:1px solid #f0e8e6;cursor:pointer;background:#fff;transition:all .15s;color:#888}
+.hslot:hover{border-color:#c47a85}
+.hslot.active{background:#f2faf5;border-color:#8fbe9e;color:#5a9e75}
+.hslot.blocked{background:#fff5f5;border-color:#f5d0d0;color:#e05555}
+
+/* ── Login ── */
+.login-page{min-height:100vh;display:flex}
+.login-left{width:260px;background:#1a1a1a;display:flex;flex-direction:column;justify-content:center;padding:40px 32px}
+.login-right{flex:1;display:flex;align-items:center;justify-content:center;background:#fff;padding:40px}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════
+     LOGIN DO ADMIN
+══════════════════════════════════════════════════ -->
+<div id="page-login" class="page on">
+  <div class="login-page">
+    <div class="login-left">
+      <p style="font-size:9px;letter-spacing:.2em;color:#444;text-transform:uppercase;margin-bottom:12px">Painel administrativo</p>
+      <h1 style="font-size:22px;font-weight:300;color:#fff;line-height:1.4;margin-bottom:16px">Studio<br>Solange<br>Mendes</h1>
+      <div style="width:24px;height:1px;background:#c47a85;margin-bottom:16px"></div>
+      <p style="font-size:11px;color:#444;line-height:1.8">Gerencie serviços,<br>horários e agendamentos.</p>
+    </div>
+    <div class="login-right">
+      <div style="width:100%;max-width:280px">
+        <p class="ey" style="margin-bottom:12px">Acesso restrito</p>
+        <h2 style="font-size:20px;margin-bottom:28px">Entrar no painel</h2>
+        <div class="fl">
+          <label class="flb">E-mail</label>
+          <input class="fi" type="email" id="login-email" placeholder="seu@email.com">
+        </div>
+        <div class="fl" style="margin-bottom:24px">
+          <label class="flb">Senha</label>
+          <input class="fi" type="password" id="login-senha" placeholder="••••••••">
+        </div>
+        <button class="bp" onclick="fazerLogin()">Entrar</button>
+        <div style="text-align:center;margin-top:20px">
+          <div style="height:1px;background:#f0e8e6;margin-bottom:16px"></div>
+          <button class="bo" style="width:100%" onclick="irParaAgendamento()">Ver página de agendamento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     AGENDAMENTO PÚBLICO
+══════════════════════════════════════════════════ -->
+<div id="page-agendar" class="page">
+  <div class="pub-header">
+    <div>
+      <p class="pub-logo">Studio Solange Mendes</p>
+      <p class="pub-sub">Agendamento online</p>
+    </div>
+    <p style="font-size:11px;color:#555;text-align:right;line-height:1.7">Recife, PE</p>
+  </div>
+
+  <div class="pub-body">
+    <!-- Steps -->
+    <div class="steps" id="steps">
+      <div class="step"><div class="stepn active" id="sn1">1</div><p class="stepl on" id="sl1">Serviço</p></div>
+      <div class="step"><div class="stepn idle" id="sn2">2</div><p class="stepl" id="sl2">Horário</p></div>
+      <div class="step"><div class="stepn idle" id="sn3">3</div><p class="stepl" id="sl3">Seus dados</p></div>
+      <div class="step"><div class="stepn idle" id="sn4">4</div><p class="stepl" id="sl4">Confirmar</p></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <!-- Esquerda: Serviços -->
+      <div>
+        <p class="ey" style="margin-bottom:14px">Passo 1 — Escolha o serviço</p>
+        <div id="lista-servicos">
+          <p style="font-size:12px;color:#bbb">Carregando serviços...</p>
+        </div>
+      </div>
+
+      <!-- Direita: Data + Hora + Dados -->
+      <div>
+        <p class="ey" style="margin-bottom:14px">Passo 2 — Data e horário</p>
+        <div class="dtabs" id="dias-tabs"></div>
+
+        <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:10px">Horários disponíveis</p>
+        <div class="slots" id="slots-container">
+          <p style="font-size:12px;color:#bbb">Selecione uma data acima</p>
+        </div>
+
+        <div class="divl"></div>
+        <p class="ey" style="margin-bottom:14px">Passo 3 — Seus dados</p>
+        <div class="fl">
+          <label class="flb">Nome completo <span style="color:#c47a85">*</span></label>
+          <input class="fi" id="cliente-nome" placeholder="Maria Silva" oninput="verificarPodeConfirmar()">
+        </div>
+        <div class="fl">
+          <label class="flb">WhatsApp <span style="color:#c47a85">*</span></label>
+          <input class="fi" id="cliente-whatsapp" placeholder="(81) 99999-0000" oninput="verificarPodeConfirmar()">
+        </div>
+
+        <div class="divl"></div>
+        <div class="sumbox" id="resumo" style="display:none">
+          <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:12px">Resumo</p>
+          <div class="sumrow"><span class="sumlbl">Serviço</span><span class="sumval" id="r-servico">—</span></div>
+          <div class="sumrow"><span class="sumlbl">Data</span><span class="sumval" id="r-data">—</span></div>
+          <div class="sumrow"><span class="sumlbl">Horário</span><span class="sumval" id="r-hora">—</span></div>
+          <div class="sumrow"><span class="sumlbl">Total</span><span class="sumval" id="r-valor" style="font-family:'Playfair Display',serif;font-size:16px">—</span></div>
+        </div>
+
+        <button class="bp" style="margin-top:14px" id="btn-confirmar" onclick="confirmarAgendamento()" disabled>
+          Confirmar agendamento
+        </button>
+        <p style="font-size:10px;color:#bbb;text-align:center;margin-top:8px" id="aviso-campos" >
+          Preencha todos os campos para continuar
+        </p>
+        <p style="font-size:10px;color:#bbb;text-align:center;margin-top:6px;line-height:1.6">
+          Cancelamentos com até 2h de antecedência.<br>
+          Você receberá confirmação no WhatsApp.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SUCESSO
+══════════════════════════════════════════════════ -->
+<div id="page-sucesso" class="page">
+  <div class="pub-header">
+    <div><p class="pub-logo">Studio Solange Mendes</p><p class="pub-sub">Agendamento online</p></div>
+  </div>
+  <div style="max-width:420px;margin:60px auto;padding:0 24px;text-align:center">
+    <div style="width:56px;height:56px;border-radius:50%;background:#f2faf5;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:22px;color:#5a9e75">✓</div>
+    <p class="ey" style="margin-bottom:10px">Agendamento confirmado</p>
+    <h2 style="font-size:24px;margin-bottom:8px">Tudo certo!</h2>
+    <p style="font-size:12px;color:#aaa;margin-bottom:28px;line-height:1.7">
+      Seu agendamento foi realizado.<br>
+      Em breve você receberá uma confirmação no WhatsApp.
+    </p>
+    <div class="sumbox" style="text-align:left;margin-bottom:24px">
+      <div class="sumrow"><span class="sumlbl">Serviço</span><span class="sumval" id="s-servico">—</span></div>
+      <div class="sumrow"><span class="sumlbl">Data</span><span class="sumval" id="s-data">—</span></div>
+      <div class="sumrow"><span class="sumlbl">Horário</span><span class="sumval" id="s-hora">—</span></div>
+      <div class="sumrow"><span class="sumlbl">Total</span><span class="sumval" id="s-valor">—</span></div>
+    </div>
+    <button class="bp" onclick="irParaAgendamento()">Fazer outro agendamento</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     ADMIN
+══════════════════════════════════════════════════ -->
+<div id="page-admin" class="page">
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="admin-brand">
+        <p class="admin-brand-name">Studio Solange</p>
+        <p class="admin-brand-sub">Admin</p>
+      </div>
+      <div class="ani on" id="nav-agenda" onclick="showAdminTab('agenda')"><div class="adot"></div>Agenda hoje</div>
+      <div class="ani" id="nav-semana" onclick="showAdminTab('semana')"><div class="adot"></div>Semana</div>
+      <div class="ani" id="nav-servicos" onclick="showAdminTab('servicos')"><div class="adot"></div>Serviços</div>
+      <div class="ani" id="nav-horarios" onclick="showAdminTab('horarios')"><div class="adot"></div>Horários</div>
+      <div class="ani" id="nav-bloqueios" onclick="showAdminTab('bloqueios')"><div class="adot"></div>Bloqueios</div>
+      <div style="margin-top:auto;padding-top:16px;border-top:1px solid #2a2a2a">
+        <button class="bo" style="width:100%;font-size:10px;padding:8px;border-color:#2a2a2a;color:#555;margin-bottom:8px" onclick="irParaAgendamento()">Ver site público</button>
+        <button class="bo" style="width:100%;font-size:10px;padding:8px;border-color:#2a2a2a;color:#555" onclick="fazerLogout()">Sair</button>
+      </div>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="admin-content">
+
+      <!-- ── TAB: AGENDA HOJE ── -->
+      <div id="tab-agenda">
+        <p class="aey" style="margin-bottom:6px" id="data-hoje-label">Carregando...</p>
+        <h2 style="font-size:20px;margin-bottom:20px">Agenda de hoje</h2>
+        <div class="stats" id="stats-hoje">
+          <div class="stat"><p class="statv" id="stat-total">—</p><p class="statl">Agendamentos</p></div>
+          <div class="stat"><p class="statv" id="stat-faturamento">—</p><p class="statl">Prev. faturamento</p></div>
+          <div class="stat"><p class="statv" id="stat-livres">—</p><p class="statl">Horários livres</p></div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden" id="agenda-hoje-lista">
+          <p style="padding:20px;font-size:12px;color:#bbb;text-align:center">Carregando agenda...</p>
+        </div>
+      </div>
+
+      <!-- ── TAB: SEMANA ── -->
+      <div id="tab-semana" style="display:none">
+        <p class="aey" style="margin-bottom:6px">Próximos dias</p>
+        <h2 style="font-size:20px;margin-bottom:20px">Agenda da semana</h2>
+        <div class="dtabs" id="semana-tabs"></div>
+        <div class="card" style="padding:0;overflow:hidden" id="semana-lista">
+          <p style="padding:20px;font-size:12px;color:#bbb;text-align:center">Selecione um dia acima</p>
+        </div>
+      </div>
+
+      <!-- ── TAB: SERVIÇOS ── -->
+      <div id="tab-servicos" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div><p class="aey" style="margin-bottom:5px">Catálogo</p><h2 style="font-size:20px">Serviços</h2></div>
+          <button class="bp" style="width:auto;padding:9px 18px;font-size:10px" onclick="abrirModalServico()">+ Novo serviço</button>
+        </div>
+        <div id="lista-servicos-admin">
+          <p style="font-size:12px;color:#bbb">Carregando...</p>
+        </div>
+      </div>
+
+      <!-- ── TAB: HORÁRIOS ── -->
+      <div id="tab-horarios" style="display:none">
+        <p class="aey" style="margin-bottom:6px">Configuração</p>
+        <h2 style="font-size:20px;margin-bottom:6px">Horários de atendimento</h2>
+        <p style="font-size:12px;color:#aaa;margin-bottom:20px">Clique para ativar ou desativar cada horário. Horários desativados não aparecem no agendamento online.</p>
+        <div class="card">
+          <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:12px">Clique para ativar / desativar</p>
+          <div class="hgrid" id="horarios-grid"></div>
+          <div style="display:flex;gap:12px;margin-top:16px;font-size:10px;color:#aaa;align-items:center">
+            <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;background:#f2faf5;border:1px solid #8fbe9e"></div>Ativo</div>
+            <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;background:#fff5f5;border:1px solid #f5d0d0"></div>Desativado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TAB: BLOQUEIOS ── -->
+      <div id="tab-bloqueios" style="display:none">
+        <p class="aey" style="margin-bottom:6px">Folgas e indisponibilidades</p>
+        <h2 style="font-size:20px;margin-bottom:20px">Bloqueios</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div class="card" style="margin-bottom:16px">
+              <p style="font-size:11px;font-weight:400;color:#1a1a1a;margin-bottom:16px">Bloquear dia inteiro</p>
+              <div class="fl">
+                <label class="flb">Data</label>
+                <input class="fi-box" type="date" id="bloqueio-data">
+              </div>
+              <div class="fl">
+                <label class="flb">Motivo (opcional)</label>
+                <input class="fi" id="bloqueio-motivo" placeholder="Ex: Folga, feriado...">
+              </div>
+              <button class="bp" onclick="salvarBloqueio()">Bloquear dia</button>
+            </div>
+            <div class="card">
+              <p style="font-size:11px;font-weight:400;color:#1a1a1a;margin-bottom:16px">Bloquear horário específico</p>
+              <div class="fl">
+                <label class="flb">Data</label>
+                <input class="fi-box" type="date" id="bloqueio-data-hora">
+              </div>
+              <div class="fl">
+                <label class="flb">Horário</label>
+                <input class="fi-box" type="time" id="bloqueio-hora" step="1800">
+              </div>
+              <div class="fl">
+                <label class="flb">Motivo (opcional)</label>
+                <input class="fi" id="bloqueio-motivo-hora" placeholder="Ex: Consulta médica...">
+              </div>
+              <button class="bp" onclick="salvarBloqueioHora()">Bloquear horário</button>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:12px">Bloqueios ativos</p>
+            <div id="lista-bloqueios">
+              <p style="font-size:12px;color:#bbb">Nenhum bloqueio cadastrado.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL SERVIÇO ── -->
+<div id="modal-servico" class="modal-bg" style="display:none">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="modal-servico-titulo">Novo Serviço</span>
+      <button class="modal-close" onclick="fecharModalServico()">×</button>
+    </div>
+    <div class="fl">
+      <label class="flb">Nome do serviço</label>
+      <input class="fi" id="svc-nome" placeholder="Ex: Corte + Escova">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="fl">
+        <label class="flb">Preço (R$)</label>
+        <input class="fi" type="number" id="svc-preco" placeholder="120">
+      </div>
+      <div class="fl">
+        <label class="flb">Duração (min)</label>
+        <input class="fi" type="number" id="svc-duracao" placeholder="60">
+      </div>
+    </div>
+    <div class="fl">
+      <label class="flb">Descrição (opcional)</label>
+      <input class="fi" id="svc-descricao" placeholder="Breve descrição do serviço">
+    </div>
+    <input type="hidden" id="svc-id">
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="bo" style="flex:1" onclick="fecharModalServico()">Cancelar</button>
+      <button class="bp" style="flex:1" onclick="salvarServico()">Salvar serviço</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// CONFIGURAÇÃO — ALTERE AQUI
+// ════════════════════════════════════════════════
+const SUPABASE_URL  = 'https://lyuhpyctuplukysscmei.supabase.co'
+const SUPABASE_ANON = 'sb_publishable_RmCruyqe1TdCzyW10VP9PQ_1ws212c0'
+const WHATSAPP_DONO = '5581986158416' // número do dono com código do país
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON)
+
+// ── Estado global ──────────────────────────────
+let state = {
+  servicoSelecionado: null,
+  dataSelecionada: null,
+  horaSelecionada: null,
+  servicos: [],
+  horariosAtivos: [],
+  agendamentosHoje: [],
+  bloqueios: [],
+  editandoServicoId: null
+}
+
+// ════════════════════════════════════════════════
+// NAVEGAÇÃO DE PÁGINAS
+// ════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'))
+  document.getElementById('page-' + id).classList.add('on')
+}
+
+function irParaAgendamento() {
+  showPage('agendar')
+  carregarServicosPublico()
+  gerarDias()
+}
+
+// ════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════
+function toast(msg, tipo = 'success') {
+  const t = document.getElementById('toast')
+  t.textContent = msg
+  t.className = 'show ' + tipo
+  setTimeout(() => t.className = '', 3000)
+}
+
+// ════════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════════
+async function fazerLogin() {
+  const email = document.getElementById('login-email').value.trim()
+  const senha = document.getElementById('login-senha').value
+  if (!email || !senha) { toast('Preencha e-mail e senha.', 'error'); return }
+
+  const { error } = await sb.auth.signInWithPassword({ email, password: senha })
+  if (error) { toast('E-mail ou senha incorretos.', 'error'); return }
+
+  showPage('admin')
+  iniciarAdmin()
+}
+
+async function fazerLogout() {
+  await sb.auth.signOut()
+  showPage('login')
+}
+
+// Verificar se já está logado ao carregar
+async function verificarSessao() {
+  const { data: { session } } = await sb.auth.getSession()
+  if (session) { showPage('admin'); iniciarAdmin() }
+}
+
+// ════════════════════════════════════════════════
+// AGENDAMENTO PÚBLICO
+// ════════════════════════════════════════════════
+async function carregarServicosPublico() {
+  const { data, error } = await sb.from('servicos').select('*').eq('ativo', true).order('nome')
+  if (error) { toast('Erro ao carregar serviços.', 'error'); return }
+  state.servicos = data || []
+  renderServicosPublico()
+}
+
+function renderServicosPublico() {
+  const el = document.getElementById('lista-servicos')
+  if (!state.servicos.length) { el.innerHTML = '<p style="font-size:12px;color:#bbb">Nenhum serviço cadastrado.</p>'; return }
+  el.innerHTML = state.servicos.map(s => `
+    <div class="scard" onclick="selecionarServico(this,'${s.id}','${s.nome}',${s.preco},${s.duracao_min})">
+      <div class="scheck"></div>
+      <div style="flex:1">
+        <p style="font-size:13px;font-weight:400;color:#1a1a1a">${s.nome}</p>
+        <p style="font-size:10px;color:#aaa;margin-top:2px">${s.duracao_min} min${s.descricao ? ' · ' + s.descricao : ''}</p>
+      </div>
+      <p style="font-size:13px;color:#888;flex-shrink:0">R$ ${Number(s.preco).toFixed(2).replace('.',',')}</p>
+    </div>
+  `).join('')
+}
+
+function selecionarServico(el, id, nome, preco, duracao) {
+  document.querySelectorAll('.scard').forEach(c => { c.classList.remove('on'); c.querySelector('.scheck').innerHTML = '' })
+  el.classList.add('on')
+  el.querySelector('.scheck').innerHTML = '✓'
+  state.servicoSelecionado = { id, nome, preco, duracao }
+  atualizarSteps()
+  atualizarResumo()
+  verificarPodeConfirmar()
+}
+
+function gerarDias() {
+  const tabs = document.getElementById('dias-tabs')
+  const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+  tabs.innerHTML = ''
+  const hoje = new Date()
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(hoje)
+    d.setDate(hoje.getDate() + i)
+    const dateStr = d.toISOString().split('T')[0]
+    const tab = document.createElement('div')
+    tab.className = 'dtab'
+    tab.innerHTML = `<p class="dtd">${String(d.getDate()).padStart(2,'0')}</p><p class="dtm">${dias[d.getDay()]}</p>`
+    tab.dataset.date = dateStr
+    tab.onclick = () => selecionarDia(tab, dateStr, `${String(d.getDate()).padStart(2,'0')} de ${meses[d.getMonth()]}`)
+    tabs.appendChild(tab)
+  }
+}
+
+async function selecionarDia(el, dateStr, label) {
+  document.querySelectorAll('#dias-tabs .dtab').forEach(t => t.classList.remove('on'))
+  el.classList.add('on')
+  state.dataSelecionada = dateStr
+  state.horaSelecionada = null
+  document.getElementById('r-data').textContent = label
+  atualizarResumo()
+  await carregarSlots(dateStr)
+  verificarPodeConfirmar()
+}
+
+async function carregarSlots(dateStr) {
+  const slotsCt = document.getElementById('slots-container')
+  slotsCt.innerHTML = '<p style="font-size:12px;color:#bbb">Carregando...</p>'
+
+  // Carregar horários ativos
+  const { data: horarios } = await sb.from('horarios').select('hora').eq('ativo', true).order('hora')
+  // Carregar agendamentos do dia
+  const { data: ags } = await sb.from('agendamentos').select('hora').eq('data', dateStr).neq('status','cancelado')
+  // Carregar bloqueios
+  const { data: bloq } = await sb.from('bloqueios').select('hora, dia_inteiro').eq('data', dateStr)
+
+  const horariosOcupados = (ags || []).map(a => a.hora)
+  const diaInteiroBloqueado = (bloq || []).some(b => b.dia_inteiro)
+  const horasBloqueadas = (bloq || []).filter(b => !b.dia_inteiro).map(b => b.hora)
+
+  if (diaInteiroBloqueado) {
+    slotsCt.innerHTML = '<p style="font-size:12px;color:#c47a85">Este dia está bloqueado.</p>'
+    return
+  }
+
+  if (!horarios || !horarios.length) {
+    slotsCt.innerHTML = '<p style="font-size:12px;color:#bbb">Nenhum horário configurado.</p>'
+    return
+  }
+
+  slotsCt.innerHTML = horarios.map(h => {
+    const hora = h.hora.substring(0, 5)
+    const tomado = horariosOcupados.includes(h.hora)
+    const bloqueado = horasBloqueadas.includes(h.hora)
+    const cls = tomado ? 'taken' : bloqueado ? 'blocked' : ''
+    return `<div class="slot ${cls}" data-hora="${h.hora}" onclick="selecionarHora(this,'${hora}')">${hora}</div>`
+  }).join('')
+}
+
+function selecionarHora(el, hora) {
+  if (el.classList.contains('taken') || el.classList.contains('blocked')) return
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('on'))
+  el.classList.add('on')
+  state.horaSelecionada = hora
+  document.getElementById('r-hora').textContent = hora
+  atualizarSteps()
+  atualizarResumo()
+  verificarPodeConfirmar()
+}
+
+function atualizarResumo() {
+  const resumo = document.getElementById('resumo')
+  if (state.servicoSelecionado) {
+    document.getElementById('r-servico').textContent = state.servicoSelecionado.nome
+    document.getElementById('r-valor').textContent = 'R$ ' + Number(state.servicoSelecionado.preco).toFixed(2).replace('.',',')
+    resumo.style.display = 'block'
+  }
+}
+
+function atualizarSteps() {
+  const s = state
+  if (s.servicoSelecionado) { document.getElementById('sn1').className = 'stepn done'; document.getElementById('sl1').className = 'stepl on' }
+  if (s.horaSelecionada) { document.getElementById('sn2').className = 'stepn done'; document.getElementById('sl2').className = 'stepl on' }
+}
+
+function verificarPodeConfirmar() {
+  const nome = document.getElementById('cliente-nome').value.trim()
+  const whatsapp = document.getElementById('cliente-whatsapp').value.trim()
+  const tudo = state.servicoSelecionado && state.dataSelecionada && state.horaSelecionada && nome && whatsapp
+  const btn = document.getElementById('btn-confirmar')
+  btn.disabled = !tudo
+  const aviso = document.getElementById('aviso-campos')
+  if (aviso) aviso.style.display = tudo ? 'none' : 'block'
+
+  // Atualizar steps visuais
+  if (state.servicoSelecionado) {
+    document.getElementById('sn1').className = 'stepn done'
+    document.getElementById('sl1').className = 'stepl on'
+  }
+  if (state.horaSelecionada) {
+    document.getElementById('sn2').className = 'stepn done'
+    document.getElementById('sl2').className = 'stepl on'
+  }
+  if (nome && whatsapp) {
+    document.getElementById('sn3').className = 'stepn done'
+    document.getElementById('sl3').className = 'stepl on'
+  } else {
+    document.getElementById('sn3').className = state.horaSelecionada ? 'stepn active' : 'stepn idle'
+    document.getElementById('sl3').className = state.horaSelecionada ? 'stepl on' : 'stepl'
+  }
+  if (tudo) {
+    document.getElementById('sn4').className = 'stepn active'
+    document.getElementById('sl4').className = 'stepl on'
+  }
+}
+
+async function confirmarAgendamento() {
+  const nome = document.getElementById('cliente-nome').value.trim()
+  const whatsapp = document.getElementById('cliente-whatsapp').value.trim()
+  if (!nome || !whatsapp) { toast('Preencha seu nome e WhatsApp.', 'error'); return }
+  if (!state.servicoSelecionado || !state.dataSelecionada || !state.horaSelecionada) { toast('Selecione serviço, data e horário.', 'error'); return }
+
+  const btn = document.getElementById('btn-confirmar')
+  btn.disabled = true
+  btn.textContent = 'Confirmando...'
+
+  const { error } = await sb.from('agendamentos').insert({
+    cliente_nome: nome,
+    cliente_whatsapp: whatsapp,
+    servico_id: state.servicoSelecionado.id,
+    servico_nome: state.servicoSelecionado.nome,
+    servico_preco: state.servicoSelecionado.preco,
+    data: state.dataSelecionada,
+    hora: state.horaSelecionada + ':00',
+    status: 'confirmado'
+  })
+
+  if (error) { toast('Erro ao confirmar. Tente novamente.', 'error'); btn.disabled = false; btn.textContent = 'Confirmar agendamento'; return }
+
+  // Notificar dono por WhatsApp
+  const msg = encodeURIComponent(`🌸 *Novo agendamento!*\n\n👤 Cliente: ${nome}\n📱 WhatsApp: ${whatsapp}\n✂️ Serviço: ${state.servicoSelecionado.nome}\n📅 Data: ${state.dataSelecionada}\n⏰ Hora: ${state.horaSelecionada}\n💰 Valor: R$ ${Number(state.servicoSelecionado.preco).toFixed(2).replace('.',',')}`)
+  window.open(`https://wa.me/${WHATSAPP_DONO}?text=${msg}`, '_blank')
+
+  // Tela de sucesso
+  document.getElementById('s-servico').textContent = state.servicoSelecionado.nome
+  document.getElementById('s-data').textContent = state.dataSelecionada
+  document.getElementById('s-hora').textContent = state.horaSelecionada
+  document.getElementById('s-valor').textContent = 'R$ ' + Number(state.servicoSelecionado.preco).toFixed(2).replace('.',',')
+  showPage('sucesso')
+}
+
+// ════════════════════════════════════════════════
+// ADMIN
+// ════════════════════════════════════════════════
+function iniciarAdmin() {
+  showAdminTab('agenda')
+  carregarAgendaHoje()
+}
+
+function showAdminTab(tab) {
+  ;['agenda','semana','servicos','horarios','bloqueios'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none'
+    document.getElementById('nav-' + t).classList.toggle('on', t === tab)
+  })
+  if (tab === 'agenda')    carregarAgendaHoje()
+  if (tab === 'semana')    carregarSemana()
+  if (tab === 'servicos')  carregarServicosAdmin()
+  if (tab === 'horarios')  carregarHorarios()
+  if (tab === 'bloqueios') carregarBloqueios()
+}
+
+// ── Agenda hoje ───────────────────────────────
+async function carregarAgendaHoje() {
+  const hoje = new Date().toISOString().split('T')[0]
+  const dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado']
+  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
+  const d = new Date()
+  document.getElementById('data-hoje-label').textContent = `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`
+
+  const { data: ags } = await sb.from('agendamentos').select('*').eq('data', hoje).neq('status','cancelado').order('hora')
+  const { data: horarios } = await sb.from('horarios').select('hora').eq('ativo', true)
+
+  const agendamentos = ags || []
+  const totalHorarios = (horarios || []).length
+  const faturamento = agendamentos.reduce((s, a) => s + Number(a.servico_preco || 0), 0)
+
+  document.getElementById('stat-total').textContent = agendamentos.length
+  document.getElementById('stat-faturamento').textContent = 'R$ ' + faturamento.toFixed(0)
+  document.getElementById('stat-livres').textContent = Math.max(0, totalHorarios - agendamentos.length)
+
+  const lista = document.getElementById('agenda-hoje-lista')
+  if (!agendamentos.length) {
+    lista.innerHTML = '<p style="padding:24px;font-size:12px;color:#bbb;text-align:center">Nenhum agendamento para hoje.</p>'
+    return
+  }
+
+  const cores = ['#c47a85','#e4a882','#9e82c4','#82b4c4','#8fbe9e']
+  lista.innerHTML = agendamentos.map((ag, i) => `
+    <div class="aitem">
+      <div class="atime">${ag.hora.substring(0,5)}</div>
+      <div class="abar" style="background:${cores[i % cores.length]}"></div>
+      <div style="flex:1">
+        <p style="font-size:12px;font-weight:400;color:#1a1a1a">${ag.cliente_nome}</p>
+        <p style="font-size:10px;color:#aaa;margin-top:1px">${ag.servico_nome} · ${ag.cliente_whatsapp}</p>
+      </div>
+      <div style="text-align:right;display:flex;align-items:center;gap:10px">
+        <span class="tpk">Confirmado</span>
+        <p style="font-size:11px;color:#888">R$ ${Number(ag.servico_preco).toFixed(0)}</p>
+        <button class="bdanger" style="font-size:9px;padding:4px 8px" onclick="cancelarAgendamento('${ag.id}')">Cancelar</button>
+      </div>
+    </div>
+  `).join('')
+}
+
+async function cancelarAgendamento(id) {
+  if (!confirm('Cancelar este agendamento?')) return
+  const { error } = await sb.from('agendamentos').update({ status: 'cancelado' }).eq('id', id)
+  if (error) { toast('Erro ao cancelar.', 'error'); return }
+  toast('Agendamento cancelado.')
+  carregarAgendaHoje()
+}
+
+// ── Semana ─────────────────────────────────────
+async function carregarSemana() {
+  const tabs = document.getElementById('semana-tabs')
+  const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+  const hoje = new Date()
+  tabs.innerHTML = ''
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(hoje)
+    d.setDate(hoje.getDate() + i)
+    const dateStr = d.toISOString().split('T')[0]
+    const tab = document.createElement('div')
+    tab.className = 'dtab' + (i === 0 ? ' on' : '')
+    tab.innerHTML = `<p class="dtd">${String(d.getDate()).padStart(2,'0')}</p><p class="dtm">${dias[d.getDay()]}</p>`
+    tab.dataset.date = dateStr
+    tab.onclick = () => { document.querySelectorAll('#semana-tabs .dtab').forEach(t => t.classList.remove('on')); tab.classList.add('on'); carregarDia(dateStr) }
+    tabs.appendChild(tab)
+  }
+  carregarDia(hoje.toISOString().split('T')[0])
+}
+
+async function carregarDia(dateStr) {
+  const { data: ags } = await sb.from('agendamentos').select('*').eq('data', dateStr).neq('status','cancelado').order('hora')
+  const lista = document.getElementById('semana-lista')
+  if (!ags || !ags.length) {
+    lista.innerHTML = '<p style="padding:24px;font-size:12px;color:#bbb;text-align:center">Nenhum agendamento neste dia.</p>'
+    return
+  }
+  const cores = ['#c47a85','#e4a882','#9e82c4','#82b4c4','#8fbe9e']
+  lista.innerHTML = `
+    <div style="padding:12px 14px;background:#fdf8f8;border-bottom:1px solid #f0e8e6;display:flex;justify-content:space-between;align-items:center">
+      <p style="font-size:11px;font-weight:400;color:#1a1a1a">${dateStr}</p>
+      <span class="tpk">${ags.length} agendamento${ags.length > 1 ? 's' : ''}</span>
+    </div>
+    ${ags.map((ag, i) => `
+      <div class="aitem">
+        <div class="atime">${ag.hora.substring(0,5)}</div>
+        <div class="abar" style="background:${cores[i % cores.length]}"></div>
+        <div style="flex:1">
+          <p style="font-size:12px;font-weight:400;color:#1a1a1a">${ag.cliente_nome}</p>
+          <p style="font-size:10px;color:#aaa;margin-top:1px">${ag.servico_nome} · ${ag.cliente_whatsapp}</p>
+        </div>
+        <p style="font-size:11px;color:#888">R$ ${Number(ag.servico_preco).toFixed(0)}</p>
+      </div>
+    `).join('')}
+  `
+}
+
+// ── Serviços admin ─────────────────────────────
+async function carregarServicosAdmin() {
+  const { data } = await sb.from('servicos').select('*').order('nome')
+  const lista = document.getElementById('lista-servicos-admin')
+  if (!data || !data.length) { lista.innerHTML = '<p style="font-size:12px;color:#bbb">Nenhum serviço.</p>'; return }
+  lista.innerHTML = `
+    <div class="card" style="padding:0;overflow:hidden">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="border-bottom:1px solid #f0e8e6;background:#fdf8f8">
+            <th style="text-align:left;padding:10px 14px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;font-weight:400">Serviço</th>
+            <th style="text-align:left;padding:10px 14px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;font-weight:400">Duração</th>
+            <th style="text-align:left;padding:10px 14px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;font-weight:400">Preço</th>
+            <th style="text-align:left;padding:10px 14px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;font-weight:400">Status</th>
+            <th style="padding:10px 14px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.map(s => `
+            <tr style="border-bottom:1px solid #f8f4f4">
+              <td style="padding:12px 14px">
+                <p style="font-size:12px;font-weight:400;color:#1a1a1a">${s.nome}</p>
+                ${s.descricao ? `<p style="font-size:10px;color:#bbb;margin-top:2px">${s.descricao}</p>` : ''}
+              </td>
+              <td style="padding:12px 14px;font-size:12px;color:#888">${s.duracao_min} min</td>
+              <td style="padding:12px 14px;font-size:12px;color:#1a1a1a;font-weight:400">R$ ${Number(s.preco).toFixed(2).replace('.',',')}</td>
+              <td style="padding:12px 14px">${s.ativo ? '<span class="tgn">Ativo</span>' : '<span class="tgy">Inativo</span>'}</td>
+              <td style="padding:12px 14px">
+                <div style="display:flex;gap:6px">
+                  <button class="bpk" style="font-size:9px;padding:5px 10px" onclick="editarServico('${s.id}','${s.nome}',${s.preco},${s.duracao_min},'${s.descricao||''}')">Editar</button>
+                  <button class="bdanger" style="font-size:9px;padding:5px 10px" onclick="excluirServico('${s.id}')">Excluir</button>
+                  <button class="bo" style="font-size:9px;padding:5px 10px;width:auto" onclick="toggleServico('${s.id}',${s.ativo})">${s.ativo ? 'Desativar' : 'Ativar'}</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `
+}
+
+function abrirModalServico() {
+  state.editandoServicoId = null
+  document.getElementById('modal-servico-titulo').textContent = 'Novo Serviço'
+  document.getElementById('svc-id').value = ''
+  document.getElementById('svc-nome').value = ''
+  document.getElementById('svc-preco').value = ''
+  document.getElementById('svc-duracao').value = ''
+  document.getElementById('svc-descricao').value = ''
+  document.getElementById('modal-servico').style.display = 'flex'
+}
+
+function editarServico(id, nome, preco, duracao, descricao) {
+  state.editandoServicoId = id
+  document.getElementById('modal-servico-titulo').textContent = 'Editar Serviço'
+  document.getElementById('svc-id').value = id
+  document.getElementById('svc-nome').value = nome
+  document.getElementById('svc-preco').value = preco
+  document.getElementById('svc-duracao').value = duracao
+  document.getElementById('svc-descricao').value = descricao
+  document.getElementById('modal-servico').style.display = 'flex'
+}
+
+function fecharModalServico() {
+  document.getElementById('modal-servico').style.display = 'none'
+}
+
+async function salvarServico() {
+  const nome = document.getElementById('svc-nome').value.trim()
+  const preco = parseFloat(document.getElementById('svc-preco').value)
+  const duracao = parseInt(document.getElementById('svc-duracao').value)
+  const descricao = document.getElementById('svc-descricao').value.trim()
+  const id = document.getElementById('svc-id').value
+
+  if (!nome || !preco || !duracao) { toast('Preencha nome, preço e duração.', 'error'); return }
+
+  const dados = { nome, preco, duracao_min: duracao, descricao, ativo: true }
+
+  let error
+  if (id) {
+    ({ error } = await sb.from('servicos').update(dados).eq('id', id))
+  } else {
+    ({ error } = await sb.from('servicos').insert(dados))
+  }
+
+  if (error) { toast('Erro ao salvar.', 'error'); return }
+
+  toast(id ? 'Serviço atualizado!' : 'Serviço criado!')
+  fecharModalServico()
+  carregarServicosAdmin()
+}
+
+async function excluirServico(id) {
+  if (!confirm('Excluir este serviço? Esta ação não pode ser desfeita.')) return
+  const { error } = await sb.from('servicos').delete().eq('id', id)
+  if (error) { toast('Erro ao excluir.', 'error'); return }
+  toast('Serviço excluído.')
+  carregarServicosAdmin()
+}
+
+async function toggleServico(id, ativo) {
+  const { error } = await sb.from('servicos').update({ ativo: !ativo }).eq('id', id)
+  if (error) { toast('Erro.', 'error'); return }
+  toast(ativo ? 'Serviço desativado.' : 'Serviço ativado.')
+  carregarServicosAdmin()
+}
+
+// ── Horários ────────────────────────────────────
+async function carregarHorarios() {
+  const { data } = await sb.from('horarios').select('*').order('hora')
+  const grid = document.getElementById('horarios-grid')
+
+  // Gerar todos os horários de 07:00 às 20:00 de 30 em 30 min
+  const todos = []
+  for (let h = 7; h <= 20; h++) {
+    todos.push(`${String(h).padStart(2,'0')}:00:00`)
+    todos.push(`${String(h).padStart(2,'0')}:30:00`)
+  }
+
+  const ativos = (data || []).map(h => h.hora)
+
+  grid.innerHTML = todos.map(hora => {
+    const ativo = ativos.includes(hora)
+    const label = hora.substring(0, 5)
+    return `<div class="hslot ${ativo ? 'active' : ''}" onclick="toggleHorario('${hora}',${ativo})">${label}</div>`
+  }).join('')
+}
+
+async function toggleHorario(hora, ativo) {
+  let error
+  if (ativo) {
+    ;({ error } = await sb.from('horarios').delete().eq('hora', hora))
+  } else {
+    ;({ error } = await sb.from('horarios').upsert({ hora, ativo: true }))
+  }
+  if (error) { toast('Erro ao alterar horário.', 'error'); return }
+  carregarHorarios()
+}
+
+// ── Bloqueios ───────────────────────────────────
+async function carregarBloqueios() {
+  const { data } = await sb.from('bloqueios').select('*').gte('data', new Date().toISOString().split('T')[0]).order('data').order('hora')
+  state.bloqueios = data || []
+  const lista = document.getElementById('lista-bloqueios')
+  if (!state.bloqueios.length) { lista.innerHTML = '<p style="font-size:12px;color:#bbb">Nenhum bloqueio ativo.</p>'; return }
+  lista.innerHTML = state.bloqueios.map(b => `
+    <div class="card" style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;padding:12px 14px">
+      <div>
+        <p style="font-size:12px;font-weight:400;color:#1a1a1a">${b.data}${!b.dia_inteiro ? ' às ' + b.hora.substring(0,5) : ' (dia inteiro)'}</p>
+        ${b.motivo ? `<p style="font-size:10px;color:#aaa;margin-top:2px">${b.motivo}</p>` : ''}
+      </div>
+      <button class="bdanger" style="font-size:9px;padding:5px 10px" onclick="removerBloqueio('${b.id}')">Remover</button>
+    </div>
+  `).join('')
+}
+
+async function salvarBloqueio() {
+  const data = document.getElementById('bloqueio-data').value
+  const motivo = document.getElementById('bloqueio-motivo').value.trim()
+  if (!data) { toast('Selecione uma data.', 'error'); return }
+  const { error } = await sb.from('bloqueios').insert({ data, dia_inteiro: true, motivo })
+  if (error) { toast('Erro ao salvar bloqueio.', 'error'); return }
+  toast('Dia bloqueado!')
+  document.getElementById('bloqueio-data').value = ''
+  document.getElementById('bloqueio-motivo').value = ''
+  carregarBloqueios()
+}
+
+async function salvarBloqueioHora() {
+  const data = document.getElementById('bloqueio-data-hora').value
+  const hora = document.getElementById('bloqueio-hora').value
+  const motivo = document.getElementById('bloqueio-motivo-hora').value.trim()
+  if (!data || !hora) { toast('Selecione data e horário.', 'error'); return }
+  const { error } = await sb.from('bloqueios').insert({ data, hora: hora + ':00', dia_inteiro: false, motivo })
+  if (error) { toast('Erro ao salvar bloqueio.', 'error'); return }
+  toast('Horário bloqueado!')
+  document.getElementById('bloqueio-data-hora').value = ''
+  document.getElementById('bloqueio-hora').value = ''
+  document.getElementById('bloqueio-motivo-hora').value = ''
+  carregarBloqueios()
+}
+
+async function removerBloqueio(id) {
+  const { error } = await sb.from('bloqueios').delete().eq('id', id)
+  if (error) { toast('Erro ao remover.', 'error'); return }
+  toast('Bloqueio removido.')
+  carregarBloqueios()
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+verificarSessao()
+</script>
+</body>
+</html>
