@@ -194,6 +194,11 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--t
   .admin-content{padding:12px}
 }
 .pub-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.hide-mobile{display:block}
+@media(max-width:768px){
+  .pub-grid{grid-template-columns:1fr}
+  .hide-mobile{display:none}
+}
 .pub-header{background:var(--carvao);padding:22px 36px;display:flex;align-items:center;justify-content:space-between}
 .pub-logo{font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;font-weight:400;letter-spacing:.04em}
 .pub-sub{font-size:9px;letter-spacing:.22em;color:var(--rosa);text-transform:uppercase;margin-top:4px}
@@ -324,7 +329,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--t
       <p class="pub-logo">Studio Solange Mendes</p>
       <p class="pub-sub">Agendamento online</p>
     </div>
-    <p style="font-size:11px;color:#555;text-align:right;line-height:1.7">Recife, PE</p>
+    <p style="font-size:11px;color:rgba(255,255,255,.5);text-align:right;line-height:1.7" class="hide-mobile">Recife, PE</p>
   </div>
 
   <div class="pub-body">
@@ -336,56 +341,59 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--t
       <div class="step"><div class="stepn idle" id="sn4">4</div><p class="stepl" id="sl4">Confirmar</p></div>
     </div>
 
-    <div class="pub-grid">
-      <!-- Esquerda: Serviços -->
-      <div>
-        <p class="ey" style="margin-bottom:14px">Passo 1 — Escolha o serviço</p>
-        <div id="lista-servicos">
-          <p style="font-size:12px;color:#bbb">Carregando serviços...</p>
-        </div>
+    <!-- SERVIÇOS -->
+    <div style="margin-bottom:24px">
+      <p class="ey" style="margin-bottom:14px">Passo 1 — Escolha o serviço</p>
+      <div id="lista-servicos">
+        <p style="font-size:12px;color:var(--text-pale)">Carregando serviços...</p>
+      </div>
+    </div>
+
+    <!-- DATA E HORA -->
+    <div style="margin-bottom:24px">
+      <p class="ey" style="margin-bottom:14px">Passo 2 — Data e horário</p>
+      <div class="dtabs" id="dias-tabs"></div>
+      <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-pale);margin-bottom:10px">Horários disponíveis</p>
+      <div class="slots" id="slots-container">
+        <p style="font-size:12px;color:var(--text-pale)">Selecione uma data acima</p>
+      </div>
+    </div>
+
+    <!-- DADOS PESSOAIS -->
+    <div style="margin-bottom:24px">
+      <div class="divl"></div>
+      <p class="ey" style="margin-bottom:16px">Passo 3 — Seus dados</p>
+      <div class="fl">
+        <label class="flb">Nome completo <span style="color:var(--rosa)">*</span></label>
+        <input class="fi" id="cliente-nome" placeholder="Maria Silva" oninput="verificarPodeConfirmar()">
+      </div>
+      <div class="fl">
+        <label class="flb">WhatsApp <span style="color:var(--rosa)">*</span></label>
+        <input class="fi" id="cliente-whatsapp" placeholder="(81) 99999-0000" oninput="verificarPodeConfirmar()">
+      </div>
+    </div>
+
+    <!-- RESUMO E CONFIRMAÇÃO -->
+    <div>
+      <div class="divl"></div>
+      <div class="sumbox" id="resumo" style="display:none;margin-bottom:16px">
+        <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-pale);margin-bottom:12px">Resumo do agendamento</p>
+        <div class="sumrow"><span class="sumlbl">Serviço</span><span class="sumval" id="r-servico">—</span></div>
+        <div class="sumrow"><span class="sumlbl">Data</span><span class="sumval" id="r-data">—</span></div>
+        <div class="sumrow"><span class="sumlbl">Horário</span><span class="sumval" id="r-hora">—</span></div>
+        <div class="sumrow"><span class="sumlbl">Total</span><span class="sumval" id="r-valor" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--rosa-dark)">—</span></div>
       </div>
 
-      <!-- Direita: Data + Hora + Dados -->
-      <div>
-        <p class="ey" style="margin-bottom:14px">Passo 2 — Data e horário</p>
-        <div class="dtabs" id="dias-tabs"></div>
-
-        <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:10px">Horários disponíveis</p>
-        <div class="slots" id="slots-container">
-          <p style="font-size:12px;color:#bbb">Selecione uma data acima</p>
-        </div>
-
-        <div class="divl"></div>
-        <p class="ey" style="margin-bottom:14px">Passo 3 — Seus dados</p>
-        <div class="fl">
-          <label class="flb">Nome completo <span style="color:#c47a85">*</span></label>
-          <input class="fi" id="cliente-nome" placeholder="Maria Silva" oninput="verificarPodeConfirmar()">
-        </div>
-        <div class="fl">
-          <label class="flb">WhatsApp <span style="color:#c47a85">*</span></label>
-          <input class="fi" id="cliente-whatsapp" placeholder="(81) 99999-0000" oninput="verificarPodeConfirmar()">
-        </div>
-
-        <div class="divl"></div>
-        <div class="sumbox" id="resumo" style="display:none">
-          <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:12px">Resumo</p>
-          <div class="sumrow"><span class="sumlbl">Serviço</span><span class="sumval" id="r-servico">—</span></div>
-          <div class="sumrow"><span class="sumlbl">Data</span><span class="sumval" id="r-data">—</span></div>
-          <div class="sumrow"><span class="sumlbl">Horário</span><span class="sumval" id="r-hora">—</span></div>
-          <div class="sumrow"><span class="sumlbl">Total</span><span class="sumval" id="r-valor" style="font-family:'Playfair Display',serif;font-size:16px">—</span></div>
-        </div>
-
-        <button class="bp" style="margin-top:14px" id="btn-confirmar" onclick="confirmarAgendamento()" disabled>
-          Confirmar agendamento
-        </button>
-        <p style="font-size:10px;color:#bbb;text-align:center;margin-top:8px" id="aviso-campos" >
-          Preencha todos os campos para continuar
-        </p>
-        <p style="font-size:10px;color:#bbb;text-align:center;margin-top:6px;line-height:1.6">
-          Cancelamentos com até 2h de antecedência.<br>
-          Você receberá confirmação no WhatsApp.
-        </p>
-      </div>
+      <button class="bp" style="margin-top:8px" id="btn-confirmar" onclick="confirmarAgendamento()" disabled>
+        Confirmar agendamento
+      </button>
+      <p style="font-size:11px;color:var(--rosa-dark);text-align:center;margin-top:10px;font-weight:500" id="aviso-campos">
+        Preencha todos os campos para continuar
+      </p>
+      <p style="font-size:10px;color:var(--text-pale);text-align:center;margin-top:8px;line-height:1.7">
+        Cancelamentos com até 2h de antecedência.<br>
+        Você receberá confirmação no WhatsApp.
+      </p>
     </div>
   </div>
 </div>
@@ -599,6 +607,9 @@ let state = {
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('on'))
   document.getElementById('page-' + id).classList.add('on')
+  // Update URL hash for direct linking
+  if (id === 'agendar') window.location.hash = 'agendar'
+  else if (id === 'login' || id === 'admin') window.location.hash = ''
 }
 
 function irParaAgendamento() {
@@ -639,6 +650,14 @@ async function fazerLogout() {
 
 // Verificar se já está logado ao carregar
 async function verificarSessao() {
+  // Se URL tem #agendar, vai direto para agendamento sem precisar de login
+  if (window.location.hash === '#agendar') {
+    showPage('agendar')
+    carregarServicosPublico()
+    gerarDias()
+    return
+  }
+  // Senão verifica se tem sessão de admin
   const { data: { session } } = await sb.auth.getSession()
   if (session) { showPage('admin'); iniciarAdmin() }
 }
