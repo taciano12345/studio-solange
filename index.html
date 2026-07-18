@@ -85,113 +85,123 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--t
    MOBILE RESPONSIVO
 ══════════════════════════════════════ */
 @media (max-width: 768px) {
+
+  /* Base — fonte maior para mobile */
+  body{font-size:15px}
+
+  /* Inputs nunca menores que 16px (evita zoom iOS) */
+  .fi,.fi-box,input,select,textarea{font-size:16px !important}
+
   /* Login */
   .login-page{flex-direction:column}
-  .login-left{width:100%;padding:32px 24px;min-height:auto;flex-direction:row;align-items:center;gap:16px}
-  .login-left h1{font-size:22px !important;margin-bottom:0 !important}
-  .login-left p:first-child{display:none}
-  .login-left p:last-child{display:none}
-  .login-right{padding:28px 20px}
+  .login-left{width:100%;padding:24px 20px;min-height:auto;flex-direction:row;align-items:center;gap:16px}
+  .login-left h1{font-size:20px !important;margin-bottom:0 !important;line-height:1.2 !important}
+  .login-right{padding:24px 20px}
 
   /* Header público */
   .pub-header{padding:16px 20px}
-  .pub-logo{font-size:17px}
-  .pub-header p:last-child{display:none}
+  .pub-logo{font-size:18px}
+  .pub-sub{font-size:9px}
 
-  /* Body público — muda para coluna única */
+  /* Body público */
   .pub-body{padding:20px 16px}
-  .pub-body > div[style*="grid-template-columns:1fr 1fr"]{
-    display:flex !important;
-    flex-direction:column !important;
-  }
 
-  /* Steps — menor */
-  .steps{margin-bottom:20px}
-  .stepl{font-size:8px}
-  .stepn{width:20px;height:20px;font-size:9px}
+  /* Steps — fonte legível */
+  .steps{margin-bottom:22px}
+  .stepl{font-size:10px;letter-spacing:.04em}
+  .stepn{width:26px;height:26px;font-size:11px}
+  .step:not(:last-child)::after{top:13px}
 
-  /* Serviços */
-  .scard{padding:12px}
+  /* Serviços — maiores para toque */
+  .scard{padding:16px 14px;margin-bottom:8px}
+  .scard p:first-of-type{font-size:15px}
+  .scard p:last-of-type{font-size:13px}
+  .scheck{width:22px;height:22px;font-size:12px}
 
-  /* Slots — menores */
-  .slot{padding:8px 10px;font-size:11px}
+  /* Dias — scroll horizontal */
+  .dtabs{gap:8px;margin-bottom:18px}
+  .dtab{min-width:54px;padding:10px 10px}
+  .dtd{font-size:22px}
+  .dtm{font-size:10px}
 
-  /* Dias */
-  .dtab{min-width:46px;padding:7px 8px}
-  .dtd{font-size:17px}
+  /* Slots — maiores para toque */
+  .slots{gap:8px}
+  .slot{padding:12px 14px;font-size:13px}
 
-  /* Horários grid */
-  .hgrid{grid-template-columns:repeat(4,1fr)}
+  /* Labels e form */
+  .flb{font-size:10px;margin-bottom:10px}
+  .fl{margin-bottom:22px}
+  .divl{margin:20px 0}
 
-  /* Stats — 2 colunas */
+  /* Resumo */
+  .sumrow{font-size:14px;padding:11px 0}
+  .sumlbl{font-size:13px}
+
+  /* Botão confirmar */
+  .bp{font-size:13px;padding:16px 24px;letter-spacing:.1em}
+
+  /* Aviso campos */
+  #aviso-campos{font-size:12px;margin-top:12px}
+
+  /* Horários grid admin */
+  .hgrid{grid-template-columns:repeat(4,1fr);gap:8px}
+  .hslot{padding:12px 6px;font-size:12px}
+
+  /* Stats */
   .stats{grid-template-columns:1fr 1fr}
-  .stat{padding:14px}
-  .statv{font-size:20px}
+  .stat{padding:16px}
+  .statv{font-size:22px}
+  .statl{font-size:10px}
 
-  /* Admin — sidebar vira menu inferior */
+  /* Admin — sidebar vira barra no topo */
   .admin-layout{flex-direction:column}
   .admin-sidebar{
-    width:100%;
-    height:auto;
-    position:sticky;
-    top:0;
+    width:100%;height:auto;
+    position:sticky;top:0;
     padding:12px 16px;
-    flex-direction:row;
-    align-items:center;
-    gap:0;
-    overflow-x:auto;
-    z-index:50;
+    flex-direction:row;align-items:center;
+    gap:0;overflow-x:auto;z-index:50;
   }
-  .admin-brand{margin-bottom:0;padding-bottom:0;border-bottom:none;padding-right:16px;margin-right:8px;border-right:1px solid rgba(255,255,255,.15);flex-shrink:0}
+  .admin-brand{margin-bottom:0;padding-bottom:0;border-bottom:none;padding-right:14px;margin-right:10px;border-right:1px solid rgba(255,255,255,.15);flex-shrink:0}
   .admin-brand-name{font-size:13px;white-space:nowrap}
   .admin-brand-sub{display:none}
-  .ani{margin-bottom:0;padding:8px 12px;white-space:nowrap;flex-shrink:0;font-size:11px}
+  .ani{margin-bottom:0;padding:10px 14px;white-space:nowrap;flex-shrink:0;font-size:12px}
   .adot{display:none}
   .admin-sidebar > div:last-child{display:none}
   .admin-content{padding:16px}
 
-  /* Agenda item — empilhar */
-  .aitem{flex-wrap:wrap;gap:8px}
-  .atime{width:auto}
+  /* Agenda item */
+  .atime{font-size:15px;width:40px}
+  .aitem{padding:12px 14px;gap:10px}
+  .aitem > div:last-child{flex-wrap:wrap;gap:6px}
 
   /* Modal */
-  .modal{padding:20px;margin:10px}
+  .modal{padding:22px 18px}
+  .modal-title{font-size:18px}
+
+  /* Tabela serviços */
+  .card table{font-size:12px;display:block;overflow-x:auto}
+  .card table td,.card table th{padding:10px 10px;white-space:nowrap}
 
   /* Bloqueios — coluna única */
   div[style*="grid-template-columns:1fr 1fr"]{
-    display:flex;
-    flex-direction:column;
+    display:flex !important;flex-direction:column !important;
   }
-  div[style*="grid-template-columns:1fr 1fr;gap:20px"]{
-    display:flex !important;
-    flex-direction:column !important;
-  }
-  div[style*="grid-template-columns:1fr 1fr;gap:16px"]{
-    display:flex !important;
-    flex-direction:column !important;
-  }
-
-  /* Tabela serviços — scroll horizontal */
-  .card table{font-size:11px}
-  .card table td,.card table th{padding:8px 10px}
-  div[style*="display:flex;gap:6px"] button{font-size:9px;padding:4px 7px}
-
-  /* Agenda admin list buttons */
-  .aitem > div:last-child{flex-wrap:wrap;gap:4px}
 }
 
 @media (max-width: 480px) {
+  body{font-size:15px}
   .pub-header{padding:14px 16px}
-  .pub-logo{font-size:15px}
-  .pub-sub{font-size:8px}
-  .pub-body{padding:16px 12px}
+  .pub-logo{font-size:16px}
+  .pub-body{padding:16px 14px}
   .hgrid{grid-template-columns:repeat(3,1fr)}
-  .stats{grid-template-columns:1fr}
-  .bp{font-size:11px;padding:12px 16px}
-  .slot{padding:7px 9px;font-size:10px}
-  .dtab{min-width:40px}
-  .dtd{font-size:15px}
+  .slot{padding:11px 12px;font-size:13px}
+  .dtab{min-width:48px}
+  .dtd{font-size:20px}
   .admin-content{padding:12px}
+  .stats{grid-template-columns:1fr 1fr}
+  .scard p:first-of-type{font-size:14px}
+  .sumbox{padding:14px}
 }
 .pub-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .hide-mobile{display:block}
