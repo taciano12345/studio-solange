@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Studio Solange Mendes</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -26,6 +26,7 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
 body{font-family:'Jost',sans-serif;font-weight:300;background:var(--branco);color:var(--text);font-size:13px}
 h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--text)}
 
@@ -84,6 +85,10 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--t
 /* ══════════════════════════════════════
    MOBILE RESPONSIVO
 ══════════════════════════════════════ */
+/* Força tudo dentro da tela */
+html,body{max-width:100vw;overflow-x:hidden}
+.page,.pub-body,.pub-header,.scard,.dtabs,.slots,.steps{max-width:100% !important;box-sizing:border-box}
+
 @media (max-width: 768px) {
 
   /* Base — fonte maior para mobile */
@@ -206,13 +211,15 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--t
 .pub-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .hide-mobile{display:block}
 @media(max-width:768px){
-  .pub-grid{grid-template-columns:1fr}
-  .hide-mobile{display:none}
+  .pub-grid{grid-template-columns:1fr !important}
+  .hide-mobile{display:none !important}
 }
-.pub-header{background:var(--carvao);padding:22px 36px;display:flex;align-items:center;justify-content:space-between}
+.pub-header{background:var(--carvao);padding:22px 36px;display:flex;align-items:center;justify-content:space-between;width:100%}
 .pub-logo{font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;font-weight:400;letter-spacing:.04em}
 .pub-sub{font-size:9px;letter-spacing:.22em;color:var(--rosa);text-transform:uppercase;margin-top:4px}
-.pub-body{max-width:960px;margin:0 auto;padding:32px 28px}
+.pub-body{width:100%;max-width:960px;margin:0 auto;padding:32px 28px}
+.scard{border:1px solid var(--cinza-b);padding:15px 16px;margin-bottom:6px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;background:var(--branco);width:100%}
+.steps{display:flex;align-items:flex-start;gap:0;margin-bottom:28px;width:100%}
 
 .steps{display:flex;align-items:flex-start;gap:0;margin-bottom:28px}
 .step{flex:1;text-align:center;position:relative}
