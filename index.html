@@ -82,8 +82,118 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--t
 #toast.error{background:#5a1a1a;border-left-color:#e05555}
 
 /* ══════════════════════════════════════
-   PUBLIC — AGENDAMENTO
+   MOBILE RESPONSIVO
 ══════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Login */
+  .login-page{flex-direction:column}
+  .login-left{width:100%;padding:32px 24px;min-height:auto;flex-direction:row;align-items:center;gap:16px}
+  .login-left h1{font-size:22px !important;margin-bottom:0 !important}
+  .login-left p:first-child{display:none}
+  .login-left p:last-child{display:none}
+  .login-right{padding:28px 20px}
+
+  /* Header público */
+  .pub-header{padding:16px 20px}
+  .pub-logo{font-size:17px}
+  .pub-header p:last-child{display:none}
+
+  /* Body público — muda para coluna única */
+  .pub-body{padding:20px 16px}
+  .pub-body > div[style*="grid-template-columns:1fr 1fr"]{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  /* Steps — menor */
+  .steps{margin-bottom:20px}
+  .stepl{font-size:8px}
+  .stepn{width:20px;height:20px;font-size:9px}
+
+  /* Serviços */
+  .scard{padding:12px}
+
+  /* Slots — menores */
+  .slot{padding:8px 10px;font-size:11px}
+
+  /* Dias */
+  .dtab{min-width:46px;padding:7px 8px}
+  .dtd{font-size:17px}
+
+  /* Horários grid */
+  .hgrid{grid-template-columns:repeat(4,1fr)}
+
+  /* Stats — 2 colunas */
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{padding:14px}
+  .statv{font-size:20px}
+
+  /* Admin — sidebar vira menu inferior */
+  .admin-layout{flex-direction:column}
+  .admin-sidebar{
+    width:100%;
+    height:auto;
+    position:sticky;
+    top:0;
+    padding:12px 16px;
+    flex-direction:row;
+    align-items:center;
+    gap:0;
+    overflow-x:auto;
+    z-index:50;
+  }
+  .admin-brand{margin-bottom:0;padding-bottom:0;border-bottom:none;padding-right:16px;margin-right:8px;border-right:1px solid rgba(255,255,255,.15);flex-shrink:0}
+  .admin-brand-name{font-size:13px;white-space:nowrap}
+  .admin-brand-sub{display:none}
+  .ani{margin-bottom:0;padding:8px 12px;white-space:nowrap;flex-shrink:0;font-size:11px}
+  .adot{display:none}
+  .admin-sidebar > div:last-child{display:none}
+  .admin-content{padding:16px}
+
+  /* Agenda item — empilhar */
+  .aitem{flex-wrap:wrap;gap:8px}
+  .atime{width:auto}
+
+  /* Modal */
+  .modal{padding:20px;margin:10px}
+
+  /* Bloqueios — coluna única */
+  div[style*="grid-template-columns:1fr 1fr"]{
+    display:flex;
+    flex-direction:column;
+  }
+  div[style*="grid-template-columns:1fr 1fr;gap:20px"]{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  div[style*="grid-template-columns:1fr 1fr;gap:16px"]{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  /* Tabela serviços — scroll horizontal */
+  .card table{font-size:11px}
+  .card table td,.card table th{padding:8px 10px}
+  div[style*="display:flex;gap:6px"] button{font-size:9px;padding:4px 7px}
+
+  /* Agenda admin list buttons */
+  .aitem > div:last-child{flex-wrap:wrap;gap:4px}
+}
+
+@media (max-width: 480px) {
+  .pub-header{padding:14px 16px}
+  .pub-logo{font-size:15px}
+  .pub-sub{font-size:8px}
+  .pub-body{padding:16px 12px}
+  .hgrid{grid-template-columns:repeat(3,1fr)}
+  .stats{grid-template-columns:1fr}
+  .bp{font-size:11px;padding:12px 16px}
+  .slot{padding:7px 9px;font-size:10px}
+  .dtab{min-width:40px}
+  .dtd{font-size:15px}
+  .admin-content{padding:12px}
+}
+.pub-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .pub-header{background:var(--carvao);padding:22px 36px;display:flex;align-items:center;justify-content:space-between}
 .pub-logo{font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;font-weight:400;letter-spacing:.04em}
 .pub-sub{font-size:9px;letter-spacing:.22em;color:var(--rosa);text-transform:uppercase;margin-top:4px}
@@ -226,7 +336,7 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--t
       <div class="step"><div class="stepn idle" id="sn4">4</div><p class="stepl" id="sl4">Confirmar</p></div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div class="pub-grid">
       <!-- Esquerda: Serviços -->
       <div>
         <p class="ey" style="margin-bottom:14px">Passo 1 — Escolha o serviço</p>
